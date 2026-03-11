@@ -1,4 +1,4 @@
-![BabyJS Logo](docs/babyjs-logo.png)
+<img src="https://raw.githubusercontent.com/rtoal/babyjs/main/docs/babyjs-logo.png" height=100>
 
 # BabyJS
 
