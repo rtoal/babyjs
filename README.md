@@ -1,4 +1,4 @@
-![BabyJS Logo](docs/babyjs-logo.png)
+![BabyJS Logo](docs/babyjs-logo.png?width=150px)
 
 # BabyJS
 
