@@ -1,0 +1,20 @@
+{
+  "name": "babyjs",
+  "version": "0.0.1",
+  "description": "An interpreter for a simple programming language called BabyJS",
+  "main": "baby.js",
+  "scripts": {
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": [
+    "compiler",
+    "interpreter",
+    "language"
+  ],
+  "author": "rtoal",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "ohm-js": "^17.5.0"
+  }
+}

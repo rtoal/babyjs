@@ -1,0 +1,42 @@
+BabyJS {
+  Program     = Statement*
+
+  Statement   = PrintStmt
+              | LetStmt
+              | AssignStmt
+              | IfStmt
+
+  PrintStmt   = print "(" Exp ")"
+  LetStmt     = let id "=" Exp
+  AssignStmt  = id "=" Exp
+  IfStmt      = if Exp "{" Statement* "}"
+
+  Exp         = Exp addop Term       -- binary
+              | Term
+
+  Term        = Term mulop Factor    -- binary
+              | Factor
+
+  Factor      = Primary "**" Factor  -- exponentiation
+              | "-" Primary          -- negation
+              | Primary
+
+  Primary     = num
+              | id                    -- id
+              | "(" Exp ")"           -- parens
+
+  addop       = "+" | "-"
+  mulop       = "*" | "/" | "%"
+
+  num         = digit+
+
+  let         = "let" ~alnum
+  print       = "print" ~alnum
+  if          = "if" ~alnum
+  keyword     = let | print | if
+
+  id          = ~keyword letter alnum*
+
+  space      += comment
+  comment     = "//" (~"\n" any)*
+}
