@@ -22,6 +22,8 @@ BabyJS {
               | Primary
 
   Primary     = num
+              | false
+              | true
               | id                    -- id
               | "(" Exp ")"           -- parens
 
@@ -33,7 +35,9 @@ BabyJS {
   let         = "let" ~alnum
   print       = "print" ~alnum
   if          = "if" ~alnum
-  keyword     = let | print | if
+  false       = "false" ~alnum
+  true        = "true" ~alnum
+  keyword     = let | print | if | false | true
 
   id          = ~keyword letter alnum*
 
