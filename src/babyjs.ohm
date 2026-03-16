@@ -8,7 +8,7 @@ BabyJS {
 
   PrintStmt   = print "(" Exp ")"
   LetStmt     = let id "=" Exp
-  AssignStmt  = id "=" Exp
+  AssignStmt  = Primary_id "=" Exp
   IfStmt      = if Exp "{" Statement* "}"
 
   Exp         = Exp addop Term       -- binary

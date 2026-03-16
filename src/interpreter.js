@@ -7,7 +7,7 @@ export default function interpret(match) {
   const memory = new Map()
 
   const grammar = match.matcher.grammar
-  const semantics = grammar.createSemantics().addOperation("eval", {
+  const actions = {
     Program(statements) {
       for (const statement of statements.children) {
         statement.eval()
@@ -27,11 +27,8 @@ export default function interpret(match) {
       }
     },
     AssignStmt(id, _eq, expression) {
-      const name = id.sourceString
-      if (!memory.has(name)) {
-        error(`Undefined variable: ${name}`, id.source)
-      }
-      memory.set(name, expression.eval())
+      id.eval() // Handles the check for undefined variable in Primary_id
+      memory.set(id.sourceString, expression.eval())
     },
     Exp_binary(left, op, right) {
       const x = left.eval()
@@ -41,6 +38,7 @@ export default function interpret(match) {
           return x + y
         case "-":
           return x - y
+        /* c8 ignore next 2 */
         default:
           error(`Unknown operator: ${op.sourceString}`, op.source)
       }
@@ -55,6 +53,7 @@ export default function interpret(match) {
           return x / y
         case "%":
           return x % y
+        /* c8 ignore next 2 */
         default:
           error(`Unknown operator: ${op.sourceString}`, op.source)
       }
@@ -78,9 +77,7 @@ export default function interpret(match) {
     num(_digits) {
       return Number(this.sourceString)
     },
-    id(_first, _rest) {
-      return this.sourceString
-    },
-  })
+  }
+  const semantics = grammar.createSemantics().addOperation("eval", actions)
   return semantics(match).eval()
 }
