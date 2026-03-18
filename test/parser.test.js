@@ -7,6 +7,7 @@ const syntaxChecks = [
   ["let x = 1", "let statements"],
   ["x = 1", "assignment statements"],
   ["if x { print(x) }", "if statements"],
+  ["if (x < 2) { print(x) }", "if statements with condition"],
   ["if x { print(x) } let y = 2", "multiple statements"],
   ["", "empty input"],
   ["let count = 3 * 22 + 1", "complex expressions"],
@@ -25,6 +26,7 @@ const syntaxErrors = [
   ["print 1)", "missing opening parenthesis"],
   ["let x = print(1)", "invalid statement"],
   ["ifx { print(x) }", "keyword should be separated from identifier"],
+  ["print(x < 2 < 5)", "comparison expressions do not associate"],
 ]
 
 describe("parser", () => {
