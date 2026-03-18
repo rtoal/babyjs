@@ -11,7 +11,10 @@ BabyJS {
   AssignStmt  = Primary_id "=" Exp
   IfStmt      = if Exp "{" Statement* "}"
 
-  Exp         = Exp addop Term       -- binary
+  Exp         = Condition relop Condition  -- binary
+              | Condition
+
+  Condition   = Condition addop Term  -- binary
               | Term
 
   Term        = Term mulop Factor    -- binary
@@ -27,6 +30,7 @@ BabyJS {
               | id                    -- id
               | "(" Exp ")"           -- parens
 
+  relop       = "<" | ">" | "<=" | ">=" | "==" | "!="
   addop       = "+" | "-"
   mulop       = "*" | "/" | "%"
 

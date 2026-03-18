@@ -84,6 +84,30 @@ export default function interpret(match) {
       validateNumber(x, left.source)
       validateNumber(y, right.source)
       switch (op.sourceString) {
+        case "<":
+          return x < y
+        case ">":
+          return x > y
+        case "<=":
+          return x <= y
+        case ">=":
+          return x >= y
+        case "==":
+          return x === y
+        case "!=":
+          return x !== y
+        /* c8 ignore next 2 */
+        default:
+          error(`Unknown operator: ${op.sourceString}`, op.source)
+      }
+    },
+
+    Condition_binary(left, op, right) {
+      const x = left.eval()
+      const y = right.eval()
+      validateNumber(x, left.source)
+      validateNumber(y, right.source)
+      switch (op.sourceString) {
         case "+":
           return x + y
         case "-":
@@ -93,6 +117,7 @@ export default function interpret(match) {
           error(`Unknown operator: ${op.sourceString}`, op.source)
       }
     },
+
     Term_binary(left, op, right) {
       const x = left.eval()
       const y = right.eval()
