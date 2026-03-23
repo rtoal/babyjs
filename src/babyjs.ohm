@@ -14,21 +14,21 @@ BabyJS {
   Exp         = Condition relop Condition  -- binary
               | Condition
 
-  Condition   = Condition addop Term  -- binary
+  Condition   = Condition addop Term       -- binary
               | Term
 
-  Term        = Term mulop Factor    -- binary
+  Term        = Term mulop Factor          -- binary
               | Factor
 
-  Factor      = Primary "**" Factor  -- exponentiation
-              | "-" Primary          -- negation
+  Factor      = Primary "**" Factor        -- exponentiation
+              | "-" Primary                -- negation
               | Primary
 
   Primary     = num
               | false
               | true
-              | id                    -- id
-              | "(" Exp ")"           -- parens
+              | id                         -- id
+              | "(" Exp ")"                -- parens
 
   relop       = "<" | ">" | "<=" | ">=" | "==" | "!="
   addop       = "+" | "-"
