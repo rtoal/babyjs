@@ -5,11 +5,16 @@ BabyJS {
               | LetStmt
               | AssignStmt
               | IfStmt
+              | WhileStmt
 
   PrintStmt   = print "(" Exp ")"
   LetStmt     = let id "=" Exp
   AssignStmt  = Primary_id "=" Exp
-  IfStmt      = if Exp "{" Statement* "}"
+  IfStmt      = if Exp Block else Block   --else
+              | if Exp Block              --noelse
+  WhileStmt   = while Exp Block
+
+  Block       = "{" Statement* "}"
 
   Exp         = Condition relop Condition  -- binary
               | Condition
@@ -30,7 +35,7 @@ BabyJS {
               | id                         -- id
               | "(" Exp ")"                -- parens
 
-  relop       = "<" | ">" | "<=" | ">=" | "==" | "!="
+  relop       = "<=" | ">=" | "<" | ">" | "==" | "!="
   addop       = "+" | "-"
   mulop       = "*" | "/" | "%"
 
@@ -39,9 +44,11 @@ BabyJS {
   let         = "let" ~alnum
   print       = "print" ~alnum
   if          = "if" ~alnum
+  else        = "else" ~alnum
+  while       = "while" ~alnum
   false       = "false" ~alnum
   true        = "true" ~alnum
-  keyword     = let | print | if | false | true
+  keyword     = let | print | if | while | false | true
 
   id          = ~keyword letter alnum*
 

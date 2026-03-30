@@ -1,3 +1,5 @@
+import * as core from "./core.js"
+
 function error(message, at) {
   const prefix = at.getLineAndColumnMessage()
   throw new Error(`${prefix}${message}`)
@@ -48,58 +50,53 @@ export default function translate(match) {
   const grammar = match.matcher.grammar
   const actions = {
     Program(statements) {
-      return {
-        kind: "Program",
-        body: statements.children.map((s) => s.translate()),
-      }
+      return core.program(statements.children.map((s) => s.translate()))
     },
 
     PrintStmt(_print, _open, expression, _close) {
       const argument = expression.translate()
-      return {
-        kind: "PrintStatement",
-        arguments: [argument],
-      }
+      return core.printStmt(argument)
     },
 
     LetStmt(_let, id, _eq, expression) {
       validateNotYetDeclared(context, id.sourceString, id.source)
       const source = expression.translate()
-      const target = {
-        kind: "Var",
-        name: id.sourceString,
-        type: typeOf(source),
-      }
+      const target = core.variable(id.sourceString, typeOf(source))
       context.set(id.sourceString, target)
-      return {
-        kind: "LetStatement",
-        target,
-        source,
-      }
+      return core.letStmt(target, source)
     },
 
-    IfStmt(_if, expression, _open, statements, _close) {
+    Block(_open, statements, _close) {
+      return statements.children.map((s) => s.translate())
+    },
+
+    IfStmt_noelse(_if, expression, block) {
       const test = expression.translate()
       validateBoolean(test, expression.source)
-      return {
-        kind: "IfStatement",
-        test,
-        consequent: {
-          kind: "BlockStatement",
-          body: statements.children.map((s) => s.translate()),
-        },
-      }
+      const consequent = block.translate()
+      return core.ifStmt(test, consequent, [])
+    },
+
+    IfStmt_else(_if, expression, block1, _else, block2) {
+      const test = expression.translate()
+      validateBoolean(test, expression.source)
+      const consequent = block1.translate()
+      const alternate = block2.translate()
+      return core.ifStmt(test, consequent, alternate)
+    },
+
+    WhileStmt(_while, expression, block) {
+      const test = expression.translate()
+      validateBoolean(test, expression.source)
+      const body = block.translate()
+      return core.whileStmt(test, body)
     },
 
     AssignStmt(id, _eq, expression) {
       const target = id.translate()
       const source = expression.translate()
       validateSameType(target, source, id.source)
-      return {
-        kind: "AssignStatement",
-        target,
-        source,
-      }
+      return core.assignStmt(target, source)
     },
 
     Exp_binary(left, op, right) {
@@ -107,14 +104,9 @@ export default function translate(match) {
       const y = right.translate()
       validateNumber(x, left.source)
       validateNumber(y, right.source)
-      return {
-        kind: "BinaryExpression",
-        operator:
-          { "==": "===", "!=": "!==" }[op.sourceString] ?? op.sourceString,
-        left: x,
-        right: y,
-        type: "boolean",
-      }
+      const operator =
+        { "==": "===", "!=": "!==" }[op.sourceString] ?? op.sourceString
+      return core.binaryExp(x, operator, y, "boolean")
     },
 
     Condition_binary(left, op, right) {
@@ -122,13 +114,7 @@ export default function translate(match) {
       const y = right.translate()
       validateNumber(x, left.source)
       validateNumber(y, right.source)
-      return {
-        kind: "BinaryExpression",
-        operator: op.sourceString,
-        left: x,
-        right: y,
-        type: "number",
-      }
+      return core.binaryExp(x, op.sourceString, y, "number")
     },
 
     Term_binary(left, op, right) {
@@ -136,13 +122,7 @@ export default function translate(match) {
       const y = right.translate()
       validateNumber(x, left.source)
       validateNumber(y, right.source)
-      return {
-        kind: "BinaryExpression",
-        operator: op.sourceString,
-        left: x,
-        right: y,
-        type: "number",
-      }
+      return core.binaryExp(x, op.sourceString, y, "number")
     },
 
     Factor_exponentiation(base, _starStar, exponent) {
@@ -150,24 +130,13 @@ export default function translate(match) {
       const y = exponent.translate()
       validateNumber(x, base.source)
       validateNumber(y, exponent.source)
-      return {
-        kind: "BinaryExpression",
-        operator: "**",
-        left: x,
-        right: y,
-        type: "number",
-      }
+      return core.binaryExp(x, "**", y, "number")
     },
 
     Factor_negation(_minus, factor) {
       const x = factor.translate()
       validateNumber(x, factor.source)
-      return {
-        kind: "UnaryExpression",
-        operator: "-",
-        argument: x,
-        type: "number",
-      }
+      return core.unaryExp("-", x, "number")
     },
 
     Primary_parens(_open, expression, _close) {

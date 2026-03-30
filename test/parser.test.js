@@ -9,7 +9,12 @@ const syntaxChecks = [
   ["if x { print(x) }", "if statements"],
   ["if (x < 2) { print(x) }", "if statements with condition"],
   ["if x { print(x) } let y = 2", "multiple statements"],
+  ["if x { print(x) } else { print(y) }", "if-else statements"],
+  ["if x { print(x) } else { print(y) x = 1 }", "if-else statements"],
   ["", "empty input"],
+  ["print(x < 2)", "comparison expressions"],
+  ["while x { print(x) }", "while statements"],
+  ["while (x < 2) { print(x) }", "while statements with condition"],
   ["let count = 3 * 22 + 1", "complex expressions"],
   ["print(1 + ((2 * 3)) % x ** 2 ** 5)", "parenthesized expressions"],
 ]
@@ -20,12 +25,14 @@ const syntaxErrors = [
   ["x = ", "missing expression"],
   ["if x print(x)", "missing braces"],
   ["if { print(x) }", "missing condition"],
+  ["if x { print(x) } else", "missing else block"],
   ["let = 1", "missing variable name"],
   ["let 1 = 2", "invalid variable name"],
   ["let if = 1", "'if' is not a variable name"],
   ["print 1)", "missing opening parenthesis"],
   ["let x = print(1)", "invalid statement"],
-  ["ifx { print(x) }", "keyword should be separated from identifier"],
+  ["ifx { print(x) }", "'if' should be separated from identifier"],
+  ["whilex { print(x) }", "'while' should be separated from identifier"],
   ["print(x < 2 < 5)", "comparison expressions do not associate"],
 ]
 

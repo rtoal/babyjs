@@ -1,7 +1,7 @@
-let x = 100 + 100
+let x = 89 + 21
 print( x / (2))
-x = x - 50
-print(x)
+x = x - 55
+print(x <= 13)
 if x > 100 {
   print(x ** 3)
 }
