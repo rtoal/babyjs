@@ -6,6 +6,7 @@ BabyJS {
               | AssignStmt
               | IfStmt
               | WhileStmt
+              | FunDecl
 
   PrintStmt   = print "(" Exp ")"
   LetStmt     = let id "=" Exp
@@ -13,8 +14,14 @@ BabyJS {
   IfStmt      = if Exp Block else Block   --else
               | if Exp Block              --noelse
   WhileStmt   = while Exp Block
+  FunDecl     = function id "(" Params ")" "=" Exp
 
   Block       = "{" Statement* "}"
+
+  Params      = ListOf<Binding, ",">
+  Binding     = id ":" Type
+
+  Type        = number | boolean
 
   Exp         = Condition relop Condition  -- binary
               | Condition
@@ -32,9 +39,11 @@ BabyJS {
   Primary     = num
               | false
               | true
+              | id "(" Args ")"            -- call
               | id                         -- id
               | "(" Exp ")"                -- parens
 
+  Args        = ListOf<Exp, ",">
   relop       = "<=" | ">=" | "<" | ">" | "==" | "!="
   addop       = "+" | "-"
   mulop       = "*" | "/" | "%"
@@ -48,7 +57,11 @@ BabyJS {
   while       = "while" ~alnum
   false       = "false" ~alnum
   true        = "true" ~alnum
-  keyword     = let | print | if | while | false | true
+  function    = "function" ~alnum
+  number      = "number" ~alnum
+  boolean     = "boolean" ~alnum
+  keyword     = let | print | if | else | while | false | true
+              | function | number | boolean
 
   id          = ~keyword letter alnum*
 

@@ -17,6 +17,30 @@ export function variable(name, type) {
   }
 }
 
+export function functionDecl(fun, body) {
+  return {
+    kind: "FunctionDeclaration",
+    function: fun,
+    body,
+  }
+}
+
+export function functionObject(name, params) {
+  return {
+    kind: "FunctionObject",
+    name,
+    params,
+  }
+}
+
+export function functionCall(callee, args, type) {
+  return {
+    kind: "FunctionCall",
+    callee,
+    arguments: args,
+    type,
+  }
+}
 export function letStmt(variable, initializer) {
   return {
     kind: "LetStatement",

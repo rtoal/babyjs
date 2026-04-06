@@ -28,7 +28,7 @@ const semanticChecks = [
   ["variable in multiplication", "let x = 2 print(x * 3)"],
   ["variable in comparison", "let x = 5 print(x <= 10)"],
   ["if statement with boolean literal", "if true { print(1) }"],
-  ["if-else statement", "if false { print(1) } else { print((0)) }"],
+  ["if-else statement", "if false { print(1) } else { print(((0))) }"],
   ["while statement", "while false { print(1) }"],
   ["if with comparison condition", "let x = 1 if x < 2 { print(x) }"],
   ["while with comparison condition", "let x = 1 while x < 10 { x = 2 }"],
@@ -36,6 +36,18 @@ const semanticChecks = [
   ["variable used in while body", "let x = 1 while false { print(x) }"],
   ["variable used in if body", "let x = 1 if true { print(x) }"],
   ["chained comparisons", "let x = 3 let y = 5 print(x < y)"],
+  [
+    "function declaration and call",
+    "function add(a: number, b: number) = a + b print(add(5, 7))",
+  ],
+  [
+    "Can look up variable in parent scope",
+    "let x = 1 function f() = x print(f())",
+  ],
+  [
+    "boolean parameter and argument",
+    "function isTrue(x: boolean) = x print(isTrue(true))",
+  ],
 ]
 
 // Programs that are syntactically correct but have semantic errors
@@ -120,6 +132,16 @@ const semanticErrors = [
     /Undefined variable/,
   ],
   ["undeclared variable in comparison", "print(x < 1)", /Undefined variable/],
+  [
+    "undeclared variable with multiple scopes",
+    "let x = 3 function f(x: number) = y",
+    /Undefined variable/,
+  ],
+  [
+    "wrong number of arguments in function call",
+    "function f() = 1 print(f(1))",
+    /Expected 0 arguments/,
+  ],
 ]
 
 describe("The analyzer", () => {

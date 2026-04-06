@@ -17,6 +17,10 @@ const syntaxChecks = [
   ["while (x < 2) { print(x) }", "while statements with condition"],
   ["let count = 3 * 22 + 1", "complex expressions"],
   ["print(1 + ((2 * 3)) % x ** 2 ** 5)", "parenthesized expressions"],
+  ["print(-5)", "unary expressions"],
+  ["print(2 ** 3 ** 2)", "right-associative exponentiation"],
+  ["function add(a: number, b: number) = a + b", "function declaration"],
+  ["print(add(5, 7))", "function call"],
 ]
 
 const syntaxErrors = [
@@ -31,9 +35,15 @@ const syntaxErrors = [
   ["let if = 1", "'if' is not a variable name"],
   ["print 1)", "missing opening parenthesis"],
   ["let x = print(1)", "invalid statement"],
+  ["let else = 1", "'else' is not a variable name"],
+  ["let while = 1", "'while' is not a variable name"],
+  ["let true = 1", "'true' is not a variable name"],
+  ["let false = 1", "'false' is not a variable name"],
   ["ifx { print(x) }", "'if' should be separated from identifier"],
   ["whilex { print(x) }", "'while' should be separated from identifier"],
+  ["functionx(a, b) = a + b", "'function' should be separated from identifier"],
   ["print(x < 2 < 5)", "comparison expressions do not associate"],
+  ["function add(a, b) = a + b", "parameter without type annotation"],
 ]
 
 describe("parser", () => {
